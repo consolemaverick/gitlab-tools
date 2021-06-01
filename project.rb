@@ -3,6 +3,8 @@ require "awesome_print"
 require 'cli/ui'
 require 'byebug'
 
+@BASE_URL = 'https://gitlab.server.com/api/v4/'
+
 def post(url, data)
   response = HTTParty.post(url, body: data, headers: { 'PRIVATE-TOKEN' => @access_token })
   JSON.parse(response.body)
@@ -73,8 +75,6 @@ end
 @namespace_id = ARGV[1]
 @server_name = ARGV[2]
 @ssh_key = ARGV[3]
-
-@BASE_URL = 'https://gitlab.server.com/api/v4/'
 
 subproject_list = get_subprojects.join(', ')
 
