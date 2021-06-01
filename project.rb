@@ -21,7 +21,7 @@ def setup_gitlab
 end
 
 def create_user(project_id)
-  data = { email: "maverick+#{@server_name}@ekohe.com", name: @server_name, username: @server_name , external: true, force_random_password: true}
+  data = { email: "maverick+#{@server_name}@server.com", name: @server_name, username: @server_name , external: true, force_random_password: true}
   response = post("#{@BASE_URL}/users", data)
   user_id = response['id']
   puts "Created user #{user_id}"
@@ -74,7 +74,7 @@ end
 @server_name = ARGV[2]
 @ssh_key = ARGV[3]
 
-@BASE_URL = 'https://gitlab.ekohe.com/api/v4/'
+@BASE_URL = 'https://gitlab.server.com/api/v4/'
 
 subproject_list = get_subprojects.join(', ')
 
