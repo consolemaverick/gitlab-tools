@@ -29,9 +29,7 @@ end
 
 def create_user(project_id)
   puts "Creating user"
-  email_prefix = @email.split('@')[0]
-  email_suffix = @email.split('@')[1]
-  data = { email: "#{email_prefix}+#{@server_name}@#{email_suffix}", name: @server_name, username: @server_name , external: true, force_random_password: true}
+  data = { email: @email, name: @server_name, username: @server_name , external: true, force_random_password: true}
   response = post("#{@base_url}/users", data)
   user_id = response['id']
   puts "Created user #{user_id}"
@@ -87,13 +85,16 @@ end
 @server_name = ARGV[2]
 @ssh_key = ARGV[3]
 @base_url = ARGV[4]
-@email = ARGV[5]
+email = ARGV[5]
 
 puts "Access Token: #{@access_token}"
 puts "Namespace ID: #{@namespace_id}"
 puts "Server Name: #{@server_name}"
 puts "SSH Key: #{@ssh_key}"
 puts "Base URL: #{@base_url}"
+email_prefix = email.split('@')[0]
+email_suffix = email.split('@')[1]
+@email = "#{email_prefix}+#{@server_name}@#{email_suffix}"
 puts "Email: #{@email}"
 
 subproject_list = get_subprojects.join(', ')
