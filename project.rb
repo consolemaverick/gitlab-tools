@@ -10,7 +10,6 @@ def post(url, data)
 end
 
 def get(url)
-  puts url
   response = HTTParty.get(url, { headers: { 'PRIVATE-TOKEN': @access_token } })
   JSON.parse(response.body)
 end
