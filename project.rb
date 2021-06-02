@@ -6,6 +6,12 @@ require 'byebug'
 
 def post(url, data)
   response = HTTParty.post(url, body: data, headers: { 'PRIVATE-TOKEN' => @access_token })
+  if response.code == 400
+    puts "Error"
+    puts response.parsed_response["message"]
+    puts "Exiting"
+    exit!
+  end
   JSON.parse(response.body)
 end
 
@@ -22,6 +28,7 @@ def setup_gitlab
 end
 
 def create_user(project_id)
+  puts "Creating user"
   email_prefix = @email.split('@')[0]
   email_suffix = @email.split('@')[1]
   data = { email: "#{email_prefix}+#{@server_name}@#{email_suffix}", name: @server_name, username: @server_name , external: true, force_random_password: true}
@@ -32,6 +39,7 @@ def create_user(project_id)
 end
 
 def add_user_to_project(project_id, user_id)
+  puts "Adding user to project"
   maintainer_access_level = 40
   data = { user_id: user_id, access_level: maintainer_access_level }
   post("#{@base_url}/projects/#{project_id}/members", data)
@@ -39,14 +47,17 @@ def add_user_to_project(project_id, user_id)
 end
 
 def add_ssh_key(user_id)
+  puts "Adding SSH key to user"
   data = { title: @server_name, key: @ssh_key}
   post("#{@base_url}/users/#{user_id}/keys", data)
   puts "Added SSH key to user"
 end
 
 def create_project
+  puts "Creating project"
   data = { namespace_id: @namespace_id, name: @server_name }
   response = post("#{@base_url}/projects", data)
+  debugger
   puts "Created Project with repo URL: #{response['ssh_url_to_repo']}"
   response['id']
 end
@@ -78,6 +89,13 @@ end
 @ssh_key = ARGV[3]
 @base_url = ARGV[4]
 @email = ARGV[5]
+
+puts "Access Token: #{@access_token}"
+puts "Namespace ID: #{@namespace_id}"
+puts "Server Name: #{@server_name}"
+puts "SSH Key: #{@ssh_key}"
+puts "Base URL: #{@base_url}"
+puts "Email: #{@email}"
 
 subproject_list = get_subprojects.join(', ')
 
