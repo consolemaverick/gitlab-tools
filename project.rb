@@ -57,7 +57,6 @@ def create_project
   puts "Creating project"
   data = { namespace_id: @namespace_id, name: @server_name }
   response = post("#{@base_url}/projects", data)
-  debugger
   puts "Created Project with repo URL: #{response['ssh_url_to_repo']}"
   response['id']
 end
